@@ -1,4 +1,5 @@
 function L_G = construct_Covariance_Laplacian_paper(pts, rc, alpha)
+% 构造协方差图的拉普拉斯
 % Strict paper literal: W(i,j) = (|ri-rj|/rc)^alpha  (Γs as written in paper)
 % pts: N×2 coordinates
 % rc, alpha: scalars from paper (e.g. alpha=5/3)
