@@ -60,7 +60,7 @@ function L = cotangent_Graph_Laplacian(pts, TR)
         else
             cot2 = 0;
         end
-        w = 0.5 * (cot1 + cot2);
+        w = (cot1 + cot2);
 
         % 累加到稀疏矩阵条目
         idx = idx + 1; I(idx)=a; J(idx)=b; V(idx)=-w;
