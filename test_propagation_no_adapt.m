@@ -26,7 +26,7 @@ trisurf(TR.ConnectivityList, pts(:,1), pts(:,2), abs(U).^2, 'EdgeColor','none');
 view(2); shading interp; axis equal; colorbar; title('初始强度');
 
 %% 传播算子：余切图 Laplacian L_C -> 用于谱域衍射
-L_C = cotangent_Graph_Laplacian(pts, TR);    % 你已有此函数或用之前版本
+L_C = cotangent_Graph_Laplacian(pts, TR);
 M_phi = min(300, size(L_C,1)-1);
 [Phi, Dlam] = eigs(L_C, M_phi, 'SM');   % 取低频谱模态用于衍射
 lambda_vec = real(diag(Dlam));          % M_phi x 1
@@ -71,7 +71,7 @@ for layer = 1:scr_count
     Mreq = min(M_turb, size(L_G,1)-1);
     [PsiG, DG] = eigs(L_G, Mreq, 'LM');   % 取“largest magnitude”按论文字面（注意可能有负值）
     eigvals = real(diag(DG));
-    % 为保证后续数值稳定，仅取非负分量（你要求简单实现，我不做复杂分支）
+    % 为保证后续数值稳定，仅取非负分量
     eigvals(eigvals < 0) = 0;
     sigma_modes = sqrt(eigvals);
 
