@@ -39,7 +39,7 @@ dz = Dz / scr_count;
 M_turb = 100;    % 取相位屏模态数（小于 N）
 nreals = 1;
 
-% 分段 r0scrn（沿用你原来计算）
+% 分段 r0scrn
 p = linspace(0,Dz,1e3);
 r0sw = (0.423*k^2*Cn2*3/8*Dz)^(-3/5);
 rytov = 0.563*k^(7/6)*sum(Cn2*(1-p/Dz).^(5/6).*p.^(5/6)*(p(2)-p(1)));
@@ -85,8 +85,13 @@ for layer = 1:scr_count
     U = U .* exp(1i * phi);
     U = propagate_HalfStep(U, Phi, lambda_vec, dz/2, k);
 end
-U11111 = abs(U).^2;
+
+Phivac = angle(U);     % 相位分布，单位 rad
+
 %% 显示最终强度
 figure;
 trisurf(TR.ConnectivityList, pts(:,1), pts(:,2), abs(U).^2, 'EdgeColor','none');
+view(2); shading interp; axis equal; colorbar; title('最终强度（论文字面 W=Gamma_s）');
+figure;
+trisurf(TR.ConnectivityList, pts(:,1), pts(:,2), Phivac, 'EdgeColor','none');
 view(2); shading interp; axis equal; colorbar; title('最终强度（论文字面 W=Gamma_s）');
