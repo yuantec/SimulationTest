@@ -47,13 +47,11 @@ $U(z+\Delta z,r)=\exp[jS(\Delta z,r)]\sum_nu_n(z)\exp\left(\frac{j}{2k}\lambda_n
    - 傅里叶变换需要规则采样点
    - 网格划分大小$h_{m}$需通过误差公式平衡：
 
-   ​	$\epsilon\leq\frac{1}{M}\sum_mh_m^2|\nabla^2U|$
-
+       $\epsilon\leq\frac{1}{M}\sum_mh_m^2|\nabla^2U|$
 2. 对复杂波前的不适应性
 
    - **湍流引起的波前畸变**：湍流会导致光场相位剧烈变化，规则网格可能无法在局部高曲率区域提供足够分辨率。
    - **计算资源浪费**：在平坦区域使用细网格会增加冗余计算，而规则网格无法动态调整分辨率。
-
 3. **数值误差的累积**
    Split-step 方法将传播过程分解为多个小步，但每一步的误差会随传播距离累积，尤其在长距离传播时更为显著。
 
@@ -76,7 +74,6 @@ $U(z+\Delta z,r)=\exp[jS(\Delta z,r)]\sum_nu_n(z)\exp\left(\frac{j}{2k}\lambda_n
 - **连续拉普拉斯算子**：
 
   在连续空间中，拉普拉斯算子定义为$\nabla^{2}U=\frac{\partial^{2}U}{\partial x^{2}}+\frac{\partial^{2}U}{\partial y^{2}}$
-
 - **离散拉普拉斯矩阵**：
 
   在图中，拉普拉斯矩阵通过邻接权重近似二阶导数：$(\nabla^2U)_n\approx\sum_mW_{nm}(U_n-U_m)$
@@ -122,34 +119,28 @@ $U(z+\Delta z,r)=\exp[jS(\Delta z,r)]\sum_nu_n(z)\exp\left(\frac{j}{2k}\lambda_n
 
    1. 点分步策略：Fibonacci螺旋法
 
-      基于黄金比例（φ ≈ 1.618）的递归算法，生成一种**无规律但均匀填充空间**的点序列。其特点是：
+      基于黄金比例（$\phi$≈ 1.618）的递归算法，生成一种**无规律但均匀填充空间**的点序列。其特点是：
 
       - 点分布具有**六边形密堆积特性**，局部密度高且无周期性；
       - 适用于模拟自然现象（如湍流），避免人为规则性引入的误差。
-
    2. 网格链接：Delaunay三角剖分
 
       **Delaunay准则**：
-      任意三角形的外接圆内​**​不包含其他顶点​**​，从而避免狭长三角形，保证网格的几何质量。![](C:\Users\yuantec\AppData\Roaming\Typora\typora-user-images\image-20250508201203426.png)
-
+      任意三角形的外接圆内**不包含其他顶点**，从而避免狭长三角形，保证网格的几何质量。![img](C:\Users\yuantec\AppData\Roaming\Typora\typora-user-images\image-20250508201203426.png)
 2. 构建余切拉普拉斯矩阵
 
    1. 遍历三角形，找到所有包含边$(n,m)$的三角形
-
    2. 对每个相邻三角形，计算边$(n,m)$对应的两个内角$\alpha_{nm}$和$\beta_{nm}$
 
-      权重赋值：定义为$W_{nm}=\cot\alpha_{nm}+\cot\beta_{nm}$![](C:\Users\yuantec\AppData\Roaming\Typora\typora-user-images\image-20250508191930423.png)
-
+      权重赋值：定义为$W_{nm}=\cot\alpha_{nm}+\cot\beta_{nm}$![img](C:\Users\yuantec\AppData\Roaming\Typora\typora-user-images\image-20250508191930423.png)
    3. 构建度矩阵和邻接矩阵
 
       - 度矩阵$D$:对角矩阵，对角线元素为顶点 $n$的总权重：
 
         $D_{nn}=\sum_mW_{nm}$
-
       - 邻接矩阵$A$:
 
         非对角线元素为边权重$W_{nm}$，对角线元素为0。
-
    4. 组合拉普拉斯矩阵
 
       最终，Cotangent Laplacian 矩阵为：
@@ -157,8 +148,7 @@ $U(z+\Delta z,r)=\exp[jS(\Delta z,r)]\sum_nu_n(z)\exp\left(\frac{j}{2k}\lambda_n
       $L^C=D-A$
 
       而后进行本征分解：
-      $L^C=\Phi\Lambda\Phi^T$	
-
+      $L^C=\Phi\Lambda\Phi^T$
 3. 构建协方差图
 
    用于在图上生成**具有统计特性**的相位扰动 $S$，模拟湍流相位屏。
@@ -168,19 +158,16 @@ $U(z+\Delta z,r)=\exp[jS(\Delta z,r)]\sum_nu_n(z)\exp\left(\frac{j}{2k}\lambda_n
    - 使用湍流协方差函数（Kolmogorov）：
 
      $\Gamma_s(\mathbf{r}_1,\mathbf{r}_2)=\left(\frac{|\mathbf{r}_1-\mathbf{r}_2|}{r_c}\right)^\alpha$
-
    - 构建稠密矩阵 $\Gamma$，然后变换成 Laplacian：
 
      $L_\Gamma=D-\Gamma$
-
    - 对 $L_{\Gamma}$做本征分解：
 
      $L^\Gamma=\Psi\Sigma\Psi^T$
 
      - 用于 Karhunen-Loève 展开：
-     
-      $S=\Psi^Ts_n\quad\text{其中}s_n\sim\mathcal{N}(0,\sigma_n^2)$
 
+     $S=\Psi^Ts_n\quad\text{其中}s_n\sim\mathcal{N}(0,\sigma_n^2)$
 4. 构建初始光场
 
    例如一个高斯光束
@@ -190,17 +177,14 @@ $U(z+\Delta z,r)=\exp[jS(\Delta z,r)]\sum_nu_n(z)\exp\left(\frac{j}{2k}\lambda_n
    投影到图拉普拉斯本征向量上得初始谱系数$u_n(0)$：
 
    $u_n(0)=\phi_n^TU_0$
-
 5. Split-Step 光场传播
 
    1. 每个谱分量乘一个传播因子：
 
       $u_n(z+\Delta z)\leftarrow u_n(z)\cdot\exp\left(\frac{j\Delta z}{2k}\lambda_n^2\right)$
-
    2. 将相位扰动场$S$映射回空间域，加在光场上：
 
       $U(z+\Delta z,r)=\Phi u_n(z+\Delta z)\cdot\exp(jS)$
-
 6. 动态自适应网格
 
    当传播到一定距离，波前曲率增大，需要重构网格。
