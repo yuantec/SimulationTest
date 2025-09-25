@@ -81,7 +81,7 @@ fprintf('lambda min/max = %.6e / %.6e\n', min(lambda_vec), max(lambda_vec));
 
 % 4) 能量守恒（单步传播前后）
 E_before = real(U0' * (M * U0));
-Utest = propagate_HalfStep(U0, Phi, lambda_vec, Dz, k, M); % 用你的传播或我给的函数
+Utest = propagate_HalfStep(U0, Phi, lambda_vec, Dz, k, M); 
 E_after = real(Utest' * (M * Utest));
 fprintf('能量比 E_after / E_before = %.6f\n', E_after / E_before);
 
